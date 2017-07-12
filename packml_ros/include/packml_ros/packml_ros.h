@@ -24,7 +24,9 @@
 #include <packml_msgs/Status.h>
 #include <packml_msgs/Transition.h>
 #include <packml_sm/state_machine.h>
-
+//Added to be compatible with our Python code (START)
+#include <std_msgs/Bool.h>
+//Added to be compatible with our Python code (END)
 
 namespace packml_ros {
 
@@ -54,6 +56,10 @@ protected:
     ros::ServiceServer trans_server_;
 
     packml_msgs::Status status_msg_;
+
+    //Added to be compatible with our Python code (START)
+    ros::Publisher start_button_ , abort_button_ , clear_button_ , hold_button_ , reset_button_, unsuspend_button_, unhold_button_,suspend_button_, stop_button_;
+    //Added to be compatible with our Python code (END)
 
 };
 } // namespace packml_ros

@@ -33,6 +33,18 @@ PackmlRos::PackmlRos(ros::NodeHandle nh, ros::NodeHandle pn,
   trans_server_ = packml_node.advertiseService("transition", &PackmlRos::transRequest, this);
   status_msg_ = packml_msgs::initStatus(pn.getNamespace());
 
+  //Added to be compatible with our Python code (START)
+  start_button_ = nh_.advertise<std_msgs::Bool>("start_button", 1);
+  abort_button_ = nh_.advertise<std_msgs::Bool>("abort_button", 1);
+  clear_button_ = nh_.advertise<std_msgs::Bool>("clear_button", 1);
+  hold_button_ = nh_.advertise<std_msgs::Bool>("hold_button", 1);
+  reset_button_ = nh_.advertise<std_msgs::Bool>("reset_button", 1);
+  unsuspend_button_ = nh_.advertise<std_msgs::Bool>("unsuspend_button", 1);
+  unhold_button_ = nh_.advertise<std_msgs::Bool>("unhold_button", 1);
+  suspend_button_ = nh_.advertise<std_msgs::Bool>("suspend_button", 1);
+  stop_button_ = nh_.advertise<std_msgs::Bool>("stop_button", 1);
+  //Added to be compatible with our Python code (END)
+
   connect(sm.get(), SIGNAL(stateChanged(int, QString)), this, SLOT(pubState(int, QString)));
 }
 
@@ -85,32 +97,76 @@ bool PackmlRos::transRequest(packml_msgs::Transition::Request &req,
   case req.ABORT:
   case req.ESTOP:
     command_rtn = sm_->abort();
+    //Added to be compatible with our Python code (START)
+    abort_button_.publish(true);
+    ros::Duration(0.5).sleep();
+    abort_button_.publish(false);
+    //Added to be compatible with our Python code (END)
     break;
   case req.CLEAR:
     command_rtn = sm_->clear();
+    //Added to be compatible with our Python code (START)
+    clear_button_.publish(true);
+    ros::Duration(0.5).sleep();
+    clear_button_.publish(false);
+    //Added to be compatible with our Python code (END)
     break;
   case req.HOLD:
     command_rtn = sm_->hold();
+    //Added to be compatible with our Python code (START)
+    hold_button_.publish(true);
+    ros::Duration(0.5).sleep();
+    hold_button_.publish(false);
+    //Added to be compatible with our Python code (END)
     break;
   case req.RESET:
     command_rtn = sm_->reset();
+    //Added to be compatible with our Python code (START)
+    reset_button_.publish(true);
+    ros::Duration(0.5).sleep();
+    reset_button_.publish(false);
+    //Added to be compatible with our Python code (END)
     break;
   case req.START:
     command_rtn = sm_->start();
+    //Added to be compatible with our Python code (START)
+    start_button_.publish(true);
+    ros::Duration(0.5).sleep();
+    start_button_.publish(false);
+    //Added to be compatible with our Python code (END)
     break;
   case req.STOP:
     command_rtn = sm_->stop();
+    //Added to be compatible with our Python code (START)
+    stop_button_.publish(true);
+    ros::Duration(0.5).sleep();
+    stop_button_.publish(false);
+    //Added to be compatible with our Python code (END)
     break;
   case req.SUSPEND:
     command_rtn = sm_->suspend();
+    //Added to be compatible with our Python code (START)
+    suspend_button_.publish(true);
+    ros::Duration(0.5).sleep();
+    suspend_button_.publish(false);
+    //Added to be compatible with our Python code (END)
     break;
   case req.UNHOLD:
     command_rtn = sm_->unhold();
+    //Added to be compatible with our Python code (START)
+    unhold_button_.publish(true);
+    ros::Duration(0.5).sleep();
+    unhold_button_.publish(false);
+    //Added to be compatible with our Python code (END)
     break;
   case req.UNSUSPEND:
     command_rtn = sm_->unsuspend();
+    //Added to be compatible with our Python code (START)
+    unsuspend_button_.publish(true);
+    ros::Duration(0.5).sleep();
+    unsuspend_button_.publish(false);
+    //Added to be compatible with our Python code (END)
     break;
-
   default:
     command_valid = false;
     break;
@@ -121,7 +177,7 @@ bool PackmlRos::transRequest(packml_msgs::Transition::Request &req,
     if(command_rtn)
     {
       ss << "Successful transition request command: " << command_int;
-      ROS_INFO_STREAM(ss.str());
+      //ROS_INFO_STREAM(ss.str());
       res.success = true;
       res.error_code = res.SUCCESS;
       res.message = ss.str();
@@ -129,7 +185,7 @@ bool PackmlRos::transRequest(packml_msgs::Transition::Request &req,
     else
     {
       ss << "Invalid transition request command: " << command_int;
-      ROS_ERROR_STREAM(ss.str());
+      //ROS_ERROR_STREAM(ss.str());
       res.success = false;
       res.error_code = res.INVALID_TRANSITION_REQUEST;
       res.message = ss.str();
@@ -138,7 +194,7 @@ bool PackmlRos::transRequest(packml_msgs::Transition::Request &req,
   else
   {
     ss << "Unrecognized transition request command: " << command_int;
-    ROS_ERROR_STREAM(ss.str());
+    //ROS_ERROR_STREAM(ss.str());
     res.success = false;
     res.error_code = res.UNRECGONIZED_REQUEST;
     res.message = ss.str();

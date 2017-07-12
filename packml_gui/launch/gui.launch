@@ -1,0 +1,6 @@
+<launch>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find packml_gui)/config/packml_gui.rviz" required="true" output="screen"/>
+
+  <node name="master" pkg="packml_smach" type="client_rosmaster_modes.py" output="screen"/> 
+
+</launch>

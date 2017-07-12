@@ -9,6 +9,8 @@ add_message_files(
     State.msg
     Stats.msg
     Status.msg
+    AllStatus.msg
+    AllTimes.msg
 )
 
 add_service_files(
